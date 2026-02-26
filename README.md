@@ -1,5 +1,5 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/e8b01999-bdd7-4c4a-b2a6-deef4d96ec67/deploy-status)](https://app.netlify.com/projects/weirdanimals/deploys)
-TEST
+
 # Bestiary - Digital Animal Encyclopedia
 
 A modern web application showcasing Earth's most fascinating and unusual creatures, built with React, Vite, and managed through Decap CMS.
