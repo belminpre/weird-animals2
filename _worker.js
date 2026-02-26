@@ -32,11 +32,18 @@ function textResponse(body, status = 200) {
   });
 }
 
+function isAssetPath(pathname) {
+  return pathname.startsWith("/uploads/")
+    || /\.(js|css|ico|svg|png|jpg|jpeg|gif|webp|woff2?|ttf|map|json)(\?.*)?$/i.test(pathname)
+    || pathname.startsWith("/assets/")
+    || pathname.startsWith("/admin");
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const { pathname, origin } = url;
-
+    try {
     // 0) Dedicated verification path — always 200, no Prerender, so integrations can verify the domain
     const verifyPath = pathname.replace(/\/$/, "") || "/";
     if ([ "/.well-known/prerender-verify", "/prerender-verify", "/verify" ].includes(verifyPath)) {
@@ -63,13 +70,15 @@ export default {
       return new Response(assetRes.body, { status: assetRes.status, statusText: assetRes.statusText, headers });
     }
 
-    // 2) Static assets — serve directly (no prerender)
-    const isAsset = /\.(js|css|ico|svg|png|jpg|jpeg|gif|webp|woff2?|ttf|map|json)(\?.*)?$/i.test(pathname)
-      || pathname.startsWith("/assets/")
-      || pathname.startsWith("/admin");
-    if (isAsset) {
-      const res = await env.ASSETS.fetch(request);
-      if (res && res.status !== 404) return res;
+    // 2) Static assets (including /uploads/*.jpg) — return 404 if missing, never 500
+    if (isAssetPath(pathname)) {
+      try {
+        const res = await env.ASSETS.fetch(request);
+        if (res && res.status === 200) return res;
+      } catch (_) {
+        // ASSETS.fetch can throw for missing files
+      }
+      return new Response("Not Found", { status: 404, headers: { "Content-Type": "text/plain" } });
     }
 
     // 2b) Domain root: if request looks like a verifier/bot, serve minimal HTML with meta tag so integration can verify
@@ -126,6 +135,17 @@ export default {
     if (res && res.status !== 404) return res;
 
     // 5) SPA fallback
-    return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+    try {
+      return await env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+    } catch (e) {
+      return new Response("Not Found", { status: 404 });
+    }
+    } catch (err) {
+      // Any uncaught error: for asset paths return 404 so images never 500
+      if (isAssetPath(pathname)) {
+        return new Response("Not Found", { status: 404, headers: { "Content-Type": "text/plain" } });
+      }
+      throw err;
+    }
   },
 };
