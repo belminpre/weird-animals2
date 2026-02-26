@@ -29,16 +29,32 @@ Your Worker is configured correctly; the failure is at the **hostname/zone** lev
 
 ## What to do
 
-1. **Use a custom domain (recommended)**  
-   Add a **custom domain** to this Worker in Cloudflare (e.g. `weird-animals.yourdomain.com`).  
-   In Prerender, **add and “verify” that domain** instead of `weird-animals.belmin.workers.dev`.  
-   On your own domain you control WAF/bot rules and can allowlist Prerender’s IPs if needed.
+### Option A: Try a URL with query string (quick test)
 
-2. **Allowlist Prerender’s IPs (if you use a custom domain)**  
-   If Prerender provides a list of IPs, add a WAF allowlist for those IPs on the zone that serves your custom domain so their crawler is not challenged.
+If Prerender’s “Add domain” or “Website URL” field accepts a **full URL** (not just the domain), try:
 
-3. **Optional: ask Prerender for IPs**  
-   You can ask: “Which IPs do you use when crawling our origin so we can allowlist them on our custom domain?” and then allowlist them in Cloudflare for that domain.
+```text
+https://weird-animals.belmin.workers.dev/?prerender_verify=1
+```
+
+The Worker treats that as a verifier request and responds with minimal HTML. If Prerender only stores the host and crawls the root without the query string, this won’t help.
+
+### Option B: Use a custom domain (reliable fix)
+
+Verification often fails on `*.workers.dev` because **Cloudflare may block or challenge Prerender’s requests before they reach your Worker**. You can’t change that for `workers.dev`. Using your own domain fixes it:
+
+1. **Add a custom domain to the Worker**
+   - Cloudflare Dashboard → **Workers & Pages** → your project **weird-animals** → **Settings** → **Domains & routes** (or **Triggers** → **Custom Domains**).
+   - Click **Add** / **Add Custom Domain**.
+   - Enter a hostname you own (e.g. `weird-animals.yourdomain.com` or a subdomain like `animals.yourdomain.com`).
+   - Follow the steps (add the CNAME they show to your DNS for that hostname). Wait until the domain shows as active.
+
+2. **In Prerender, add that domain**
+   - Use `https://weird-animals.yourdomain.com` (or whatever hostname you added) as the site URL.
+   - Run “Verify” again. The request goes to your domain; your Worker still runs, and Cloudflare won’t apply the same bot rules as on `*.workers.dev`.
+
+3. **Optional: allowlist Prerender’s IPs**
+   - If Prerender documents IPs to allow, in Cloudflare go to your **domain’s** zone (not Workers) → **Security** → **WAF** (or **Tools** → **IP Access Rules**) and allow those IPs so their crawler isn’t challenged.
 
 ## Summary
 
