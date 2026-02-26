@@ -160,6 +160,14 @@ export default {
         h.set("X-Prerender-Attempted", "1");
         if (prerenderStatus != null) h.set("X-Prerender-Status", String(prerenderStatus));
         h.set("Cache-Control", "no-store");
+        if (isCrawler(request)) {
+          h.set("X-Debug-Prerender", `enabled=${prerenderEnabled ? 1 : 0},base=${base ? 1 : 0},token=${token ? 1 : 0},crawler=1`);
+        }
+        return new Response(spaRes.body, { status: spaRes.status, headers: h });
+      }
+      if (isCrawler(request)) {
+        const h = new Headers(spaRes.headers);
+        h.set("X-Debug-Prerender", `enabled=${prerenderEnabled ? 1 : 0},base=${base ? 1 : 0},token=${token ? 1 : 0},crawler=1`);
         return new Response(spaRes.body, { status: spaRes.status, headers: h });
       }
       return spaRes;
@@ -170,6 +178,9 @@ export default {
         if (prerenderAttempted) {
           h.set("X-Prerender-Attempted", "1");
           if (prerenderStatus != null) h.set("X-Prerender-Status", String(prerenderStatus));
+        }
+        if (isCrawler(request)) {
+          h.set("X-Debug-Prerender", `enabled=${prerenderEnabled ? 1 : 0},base=${base ? 1 : 0},token=${token ? 1 : 0},crawler=1`);
         }
         return new Response(EMBEDDED_INDEX_HTML, { status: 200, headers: h });
       }
