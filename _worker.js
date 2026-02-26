@@ -145,9 +145,10 @@ export default {
     }
     if (res && res.status !== 404) return res;
 
-    // 5) SPA fallback
+    // 5) SPA fallback — use a plain GET for index.html so ASSETS never throws on crawler request
     try {
-      const spaRes = await env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+      const indexUrl = new URL("/index.html", url).toString();
+      const spaRes = await env.ASSETS.fetch(new Request(indexUrl, { method: "GET" }));
       if (prerenderAttempted) {
         const h = new Headers(spaRes.headers);
         h.set("X-Prerender-Attempted", "1");
