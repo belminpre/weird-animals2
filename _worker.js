@@ -1,5 +1,6 @@
-// Cloudflare Pages _worker.js — Weird Animals
-// - Prerender: serve pre-rendered HTML to crawlers (uses PRERENDER_BASE + PRERENDER_TOKEN; set in Cloudflare to hit staging).
+// Cloudflare Worker _worker.js — Weird Animals
+// - Prerender: set ENABLE_PRERENDER=true in env to serve pre-rendered HTML to crawlers (PRERENDER_BASE + PRERENDER_TOKEN).
+//   Leave unset for domain verification so the integration sees the real site.
 // - Sitemap/robots: serve with correct XML/text headers.
 // - SPA: serve index.html for non-asset routes.
 
@@ -73,10 +74,11 @@ export default {
       return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
     }
 
-    // 3) Prerender: crawlers only (non-root pages), when staging/production env is set
+    // 3) Prerender: only when ENABLE_PRERENDER=true (off by default so domain verification hits real site)
     const base = env.PRERENDER_BASE;
     const token = env.PRERENDER_TOKEN;
-    if (base && token && isCrawler(request)) {
+    const prerenderEnabled = env.ENABLE_PRERENDER === "true" || env.ENABLE_PRERENDER === "1";
+    if (prerenderEnabled && base && token && isCrawler(request)) {
       try {
         // Full URL so Prerender knows which page to render (staging expects this)
         const prerenderUrl = `${base.replace(/\/$/, "")}/${url.href}`;
