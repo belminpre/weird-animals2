@@ -1,35 +1,34 @@
-# Deploying to Cloudflare Workers
+# Deploying to Cloudflare Pages
 
-This project uses **Workers + Assets**: `_worker.js` plus static files in `dist/`.
+This project uses **Pages (advanced mode)** with a custom `_worker.js` and static files in `dist/`.
 
-## Why “build skipped” / deploy fails
+## Dashboard settings (Git integration)
 
-If the **build step never runs**, there is no `dist/` folder. Then `wrangler deploy` runs without assets and fails.
+In **Cloudflare Pages** → your project → **Settings** → **Builds & deployments**:
 
-You must run the app build **before** Wrangler deploy.
-
-## Option A: Cloudflare dashboard (Git integration)
-
-In your Cloudflare Workers/Pages project → **Settings** → **Builds & deployments**:
-
-1. **Build command:** `npm run build`  
-   (Do not leave this empty.)
+1. **Build command:** `npm run build`
 2. **Build output directory:** `dist`
-3. **Deploy command** (if separate): `npx wrangler deploy`  
-   Or use a single build command: `npm run deploy` (runs build then deploy).
+3. **Deploy command:** `cp _worker.js dist && npx wrangler pages deploy ./dist`
 
-Save and redeploy.
+Or use the single script (build + copy worker + deploy):
 
-## Option B: Single command (CI or local)
+- **Build command:** `npm run deploy:pages`
+- **Build output directory:** leave empty (script handles deploy).
+
+If your UI has separate "Build" and "Deploy" steps, set **Deploy command** to:
+
+```bash
+cp _worker.js dist && npx wrangler pages deploy ./dist
+```
+
+`_worker.js` must be inside the deployed directory for Pages to use it.
+
+## Local / CI
 
 From the repo root:
 
 ```bash
-npm run deploy
+npm run deploy:pages
 ```
 
-This runs `npm run build` then `npx wrangler deploy`, so the build is never skipped.
-
-## Option C: GitHub Actions
-
-Add a workflow that installs deps, runs `npm run build`, then `npx wrangler deploy` (with `CLOUDFLARE_API_TOKEN` in secrets). Then the build always runs in CI before deploy.
+Runs: build → copy `_worker.js` into `dist/` → `wrangler pages deploy ./dist`.

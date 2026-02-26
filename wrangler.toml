@@ -1,10 +1,6 @@
-# Cloudflare Workers + Assets (_worker.js + static site in dist)
-# Deploy: npm run build && npx wrangler deploy
-# Local dev: npm run build && npx wrangler dev
+# Cloudflare Pages + custom _worker.js (advanced mode)
+# Deploy: npm run deploy:pages  (builds, copies _worker.js into dist, then pages deploy)
 
 name = "weird-animals"
 compatibility_date = "2024-01-01"
-main = "_worker.js"
-
-[assets]
-directory = "./dist"
+pages_build_output_dir = "dist"
