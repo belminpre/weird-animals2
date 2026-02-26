@@ -145,11 +145,11 @@ export default {
     }
     if (res && res.status !== 404) return res;
 
-    // 5) SPA fallback — fetch root via subrequest so we get the same response as homepage
+    // 5) SPA fallback — request index.html from ASSETS (same path as root uses)
     try {
-      const rootUrl = new URL("/", url).toString();
-      const spaRes = await fetch(new Request(rootUrl, { method: "GET", headers: { "Accept": "text/html" } }));
-      if (!spaRes.ok) throw new Error("root fetch failed");
+      const indexRequest = new Request(new URL("/index.html", url).href, { method: "GET" });
+      const spaRes = await env.ASSETS.fetch(indexRequest);
+      if (!spaRes || !spaRes.ok) throw new Error("ASSETS fetch failed");
       if (prerenderAttempted) {
         const h = new Headers(spaRes.headers);
         h.set("X-Prerender-Attempted", "1");
@@ -158,7 +158,8 @@ export default {
       }
       return spaRes;
     } catch (e) {
-      return new Response("Not Found", { status: 404 });
+      // Subrequest or ASSETS failed — return 404 but mark so we can debug (remove header later)
+      return new Response("Not Found", { status: 404, headers: { "X-SPA-Fallback": "catch", "Content-Type": "text/plain" } });
     }
     } catch (err) {
       // Any uncaught error: for asset paths return 404 so images never 500
