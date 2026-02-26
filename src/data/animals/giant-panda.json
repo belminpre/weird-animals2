@@ -13,7 +13,7 @@
     "Has one of the most restrictive diets of any mammal"
   ],
   "conservationStatus": "Vulnerable",
-  "image": "/uploads/giant-panda.jpg",
+  "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG",
   "size": "1.2-1.9 meters (4-6 feet) long",
   "diet": "Herbivore"
 }

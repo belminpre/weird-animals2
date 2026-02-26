@@ -1,23 +1,10 @@
 # Animal images
 
-The app expects these image files here so they are served at `/uploads/<name>.jpg`:
+Animal images are now loaded from **free external URLs** (Pexels and Wikimedia Commons). No image files need to be added here for the site to work.
 
-- african-elephant.jpg
-- aye-aye.jpg
-- barreleye-fish.jpg
-- blue-ringed-octopus.jpg
-- coelacanth.jpg
-- dumbo-octopus.jpg
-- emperor-penguin.jpg
-- giant-panda.jpg
-- harpy-eagle.jpg
-- horseshoe-crab.jpg
-- peregrine-falcon.jpg
-- slow-loris.jpg
-- snow-leopard.jpg
-- star-nosed-mole.jpg
-- tarsier.jpg
-- vampire-squid.jpg
+If you prefer to host your own images instead:
+- Add the corresponding `.jpg` files here (e.g. `african-elephant.jpg`, `aye-aye.jpg`, …).
+- Update the `"image"` field in each `src/data/animals/*.json` file back to `/uploads/<filename>.jpg`.
+- Run `npm run build` and redeploy.
 
-Add the corresponding `.jpg` files into this folder, then run `npm run build` and redeploy.  
-Vite copies `public/` into `dist/`, so they will be available at `/uploads/...` in production.
+Current image sources: Pexels (CC0) and Wikimedia Commons (CC-licensed).
