@@ -1,0 +1,7 @@
+# Cloudflare Pages + custom _worker.js
+# Deploy: wrangler pages deploy dist
+# Local dev: npm run build && wrangler pages dev dist
+
+name = "weird-animals"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
