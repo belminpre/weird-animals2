@@ -53,8 +53,10 @@ Verification often fails on `*.workers.dev` because **Cloudflare may block or ch
    - Use `https://weird-animals.yourdomain.com` (or whatever hostname you added) as the site URL.
    - Run “Verify” again. The request goes to your domain; your Worker still runs, and Cloudflare won’t apply the same bot rules as on `*.workers.dev`.
 
-3. **Optional: allowlist Prerender’s IPs**
-   - If Prerender documents IPs to allow, in Cloudflare go to your **domain’s** zone (not Workers) → **Security** → **WAF** (or **Tools** → **IP Access Rules**) and allow those IPs so their crawler isn’t challenged.
+3. **Allowlist Prerender’s IPs**
+   - Official list: **https://ipranges.prerender.io/ipranges-all.txt** (update at least monthly).
+   - Docs: https://docs.prerender.io/docs/ip-addresses
+   - In Cloudflare: your **domain’s** zone → **Security** → **WAF** (or **IP Access Rules**) → allow those IPs. See **PRERENDER-SETUP.md** for full custom-domain + allowlist steps.
 
 ## Summary
 
