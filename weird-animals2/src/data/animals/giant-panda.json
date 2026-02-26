@@ -1,0 +1,19 @@
+{
+  "name": "Giant Panda",
+  "scientificName": "Ailuropoda melanoleuca",
+  "category": "Mammals",
+  "habitat": "Bamboo forests in mountains",
+  "location": "Central China",
+  "description": "The giant panda is one of the world's most beloved and recognizable animals. Despite being classified as a carnivore, pandas have evolved to eat almost exclusively bamboo, spending 12-16 hours a day eating to meet their nutritional needs.",
+  "funFacts": [
+    "Eats 26-84 pounds of bamboo per day",
+    "Has a pseudo-thumb to help grip bamboo stalks",
+    "Cubs are born pink, blind, and about the size of a stick of butter",
+    "Can live up to 30 years in captivity",
+    "Has one of the most restrictive diets of any mammal"
+  ],
+  "conservationStatus": "Vulnerable",
+  "image": "/uploads/giant-panda.jpg",
+  "size": "1.2-1.9 meters (4-6 feet) long",
+  "diet": "Herbivore"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Peregrine Falcon",
+  "scientificName": "Falco peregrinus",
+  "category": "Birds",
+  "habitat": "Urban areas, cliffs, and open landscapes",
+  "location": "Found on every continent except Antarctica",
+  "description": "The peregrine falcon is the fastest animal on Earth, capable of reaching speeds over 240 mph during hunting dives. These remarkable birds of prey have made an incredible recovery after nearly going extinct due to DDT pesticide use.",
+  "funFacts": [
+    "Fastest animal on Earth, reaching speeds over 240 mph in hunting dives",
+    "Can spot prey from over 3 miles away",
+    "Nests on skyscrapers in many major cities worldwide",
+    "Nearly went extinct in the 1970s but made a remarkable recovery",
+    "Their nostrils have special baffles to prevent lung damage during high-speed dives"
+  ],
+  "conservationStatus": "Least Concern",
+  "image": "/uploads/peregrine-falcon.jpg",
+  "size": "34-58 cm (13-23 inches) wingspan up to 120 cm",
+  "diet": "Carnivore"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Coelacanth",
+  "scientificName": "Latimeria chalumnae",
+  "category": "living-fossils",
+  "habitat": "Deep ocean caves and rocky slopes",
+  "location": "Indian Ocean (off South Africa and Comoros)",
+  "description": "The coelacanth was thought extinct for 66 million years until a living specimen was caught in 1938. This 'living fossil' has lobed fins that move like limbs and is closely related to the first fish that walked on land. It can live over 100 years and doesn't reach maturity until age 55.",
+  "funFacts": [
+    "Thought extinct for 66 million years until rediscovered in 1938",
+    "Lobed fins move alternately like a walking animal",
+    "Can live over 100 years and pregnancies last 5 years",
+    "Has a primitive lung and can detect electrical fields",
+    "One of the closest living relatives to land vertebrates"
+  ],
+  "conservationStatus": "Critically Endangered",
+  "image": "/uploads/coelacanth.jpg",
+  "size": "1-2 meters (3-6 feet) long",
+  "diet": "Carnivore"
+}

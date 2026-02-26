@@ -1,0 +1,19 @@
+{
+  "name": "Harpy Eagle",
+  "scientificName": "Harpia harpyja",
+  "category": "Birds",
+  "habitat": "Tropical rainforest canopy",
+  "location": "Central and South America",
+  "description": "The harpy eagle is one of the most powerful birds of prey in the world, with talons larger than grizzly bear claws. These magnificent eagles are apex predators of the rainforest canopy and are considered near-mythical by many indigenous cultures.",
+  "funFacts": [
+    "Has the largest talons of any living eagle",
+    "Can fly silently through dense forest canopy",
+    "Their facial disc helps direct sound to their ears like an owl",
+    "Can lift prey weighing up to 20 pounds",
+    "Nests are used for multiple years and can be 6 feet wide"
+  ],
+  "conservationStatus": "Near Threatened",
+  "image": "/uploads/harpy-eagle.jpg",
+  "size": "86-107 cm (34-42 inches) wingspan up to 224 cm",
+  "diet": "Carnivore"
+}

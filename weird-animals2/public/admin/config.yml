@@ -1,0 +1,87 @@
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+collections:
+  - name: "pages"
+    label: "Pages"
+    files:
+      - file: "src/pages/homepage/index.json"
+        label: "Homepage"
+        name: "homepage"
+        fields:
+          - { label: "Subtitle", name: "subtitle", widget: "string" }
+          - { label: "Featured title", name: "featuredTitle", widget: "string" }
+          - {
+              label: "Featured subtitle",
+              name: "featuredSubtitle",
+              widget: "string",
+            }
+          - { label: "Footer title", name: "footerTitle", widget: "string" }
+          - {
+              label: "Footer subtitle",
+              name: "footerSubtitle",
+              widget: "string",
+            }
+  - name: "animal-category"
+    label: "Animal Categories"
+    folder: "src/data/categories"
+    format: "json"
+    extension: "json"
+    create: true
+    slug: "{{name}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Color", name: "color", widget: "color" }
+  - name: "animal"
+    label: "Animals"
+    folder: "src/data/animals"
+    format: "json"
+    extension: "json"
+    create: true
+    slug: "{{name}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Scientific Name", name: "scientificName", widget: "string" }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "relation",
+          collection: "animal-category",
+          search_fields: ["name"],
+          display_fields: ["name"],
+          value_field: "name",
+        }
+      - { label: "Habitat", name: "habitat", widget: "string" }
+      - { label: "Location", name: "location", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - {
+          label: "Fun Facts",
+          name: "funFacts",
+          widget: "list",
+          field: { label: "Fun fact", name: "fact", widget: "string" },
+        }
+      - {
+          label: "Conservation Status",
+          name: "conservationStatus",
+          widget: "select",
+          options:
+            [
+              "Least Concern",
+              "Near Threatened",
+              "Vulnerable",
+              "Endangered",
+              "Critically Endangered",
+              "Extinct in the Wild",
+              "Extinct",
+            ],
+        }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Size", name: "size", widget: "string" }
+      - { label: "Diet", name: "diet", widget: "string" }

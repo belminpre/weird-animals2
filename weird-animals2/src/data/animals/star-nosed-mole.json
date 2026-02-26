@@ -1,0 +1,19 @@
+{
+  "name": "Star-nosed Mole",
+  "scientificName": "Condylura cristata",
+  "category": "nocturnal-oddities",
+  "habitat": "Wetlands, marshes, and underground tunnels",
+  "location": "Eastern North America",
+  "description": "The star-nosed mole has one of the most bizarre facial features in the animal kingdom - a fleshy star of 22 tentacle-like appendages around its nose. This alien-looking organ is actually the most sensitive touch organ of any mammal, with over 100,000 nerve fibers.",
+  "funFacts": [
+    "Has the most sensitive touch organ of any mammal",
+    "Can identify and eat prey in 120 milliseconds",
+    "Star contains over 100,000 nerve fibers (6 times more than a human hand)",
+    "Can smell underwater by blowing and re-inhaling air bubbles",
+    "Eats faster than the human eye can follow"
+  ],
+  "conservationStatus": "Least Concern",
+  "image": "/uploads/star-nosed-mole.jpg",
+  "size": "15-20 cm (6-8 inches)",
+  "diet": "Insectivore"
+}

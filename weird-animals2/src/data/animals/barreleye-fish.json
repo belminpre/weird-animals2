@@ -1,0 +1,19 @@
+{
+  "name": "Barreleye Fish",
+  "scientificName": "Macropinna microstoma",
+  "category": "deep-sea-creatures",
+  "habitat": "Deep ocean twilight zone",
+  "location": "North Pacific Ocean (600-800m depth)",
+  "description": "The barreleye fish has a completely transparent head filled with fluid, allowing its tubular eyes to rotate upward to spot prey silhouetted against the faint light from above. This bizarre adaptation makes it one of the most alien-looking creatures on our planet.",
+  "funFacts": [
+    "Has a completely transparent, fluid-filled head",
+    "Eyes can rotate 90 degrees to look straight up through its skull",
+    "Was first described in 1939 but transparent head wasn't discovered until 2004",
+    "Steals food from siphonophores using its precise eye movement",
+    "Can remain motionless for hours waiting for prey"
+  ],
+  "conservationStatus": "Least Concern",
+  "image": "/uploads/barreleye-fish.jpg",
+  "size": "15 cm (6 inches)",
+  "diet": "Carnivore"
+}

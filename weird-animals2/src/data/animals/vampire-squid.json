@@ -1,0 +1,19 @@
+{
+  "name": "Vampire Squid",
+  "scientificName": "Vampyroteutis infernalis",
+  "category": "deep-sea-creatures",
+  "habitat": "Deep ocean oxygen minimum zones",
+  "location": "Deep waters worldwide (600-900m depth)",
+  "description": "Despite its ominous name, the vampire squid doesn't drink blood. This living fossil can turn itself inside out when threatened and survives in areas with almost no oxygen. It's neither squid nor octopus but belongs to its own unique order.",
+  "funFacts": [
+    "Can turn itself completely inside out for protection",
+    "Survives in oxygen levels as low as 3% (lethal to most marine life)",
+    "Has the largest eyes relative to body size of any animal on Earth",
+    "Is a living fossil - unchanged for 300 million years",
+    "Neither squid nor octopus but in its own taxonomic order"
+  ],
+  "conservationStatus": "Least Concern",
+  "image": "/uploads/vampire-squid.jpg",
+  "size": "15-30 cm (6-12 inches)",
+  "diet": "Carnivore"
+}
