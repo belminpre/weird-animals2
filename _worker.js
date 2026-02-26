@@ -37,6 +37,18 @@ export default {
     const url = new URL(request.url);
     const { pathname, origin } = url;
 
+    // 0) Dedicated verification path — always 200, no Prerender, so integrations can verify the domain
+    const verifyPath = pathname.replace(/\/$/, "") || "/";
+    if ([ "/.well-known/prerender-verify", "/prerender-verify", "/verify" ].includes(verifyPath)) {
+      return new Response("OK", {
+        status: 200,
+        headers: new Headers({
+          "Content-Type": "text/plain; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+        }),
+      });
+    }
+
     // 1) Sitemap and robots — serve from assets with correct headers
     if (/^\/(sitemap.*\.xml|robots\.txt)$/i.test(pathname)) {
       const assetRes = await env.ASSETS.fetch(request);
