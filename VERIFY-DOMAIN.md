@@ -1,56 +1,47 @@
-# Domain verification (e.g. Prerender) still failing
+# Prerender integration and “domain verification”
 
-When you enter only the **domain** (e.g. `https://weird-animals.belmin.workers.dev`), the integration fetches the **root** (`/`). The Worker now:
+## How Prerender works (no special verification)
 
-- Serves **minimal HTML with `<meta name="prerender-verify" content="ok">`** when the request looks like a verifier (User-Agent contains "prerender", "verify", "bot", "curl", etc.).
-- Serves the real site for normal browsers.
+Prerender does **not** use TXT records, meta tags, or a dedicated verification URL. It:
 
-If verification still fails, the request may **never reach your Worker** (see below).
+- **Crawls your public URLs** the same way search engines do (e.g. `https://yourdomain.com/`, `/some-page`).
+- Uses a **User-Agent that contains "Prerender"** when fetching from your origin.
+- Requires **no verification meta tag or token** in the HTML. Integration is done at the **proxy/CDN** (your Cloudflare Worker), not in the page.
 
-## 1. Use a custom verification URL (if the integration allows it)
+So when the dashboard “verifies” your domain, it is effectively checking that Prerender’s crawler can reach your site and get a normal response (e.g. 200).
 
-The Worker now responds with **200 OK** at these paths:
+## How this project is wired (Cloudflare Worker)
 
-- `https://weird-animals.belmin.workers.dev/.well-known/prerender-verify`
-- `https://weird-animals.belmin.workers.dev/prerender-verify`
-- `https://weird-animals.belmin.workers.dev/verify`
+- **Worker:** `_worker.js` in front of static assets in `dist/`.
+- **When `ENABLE_PRERENDER` is not set (default):** All requests, including Prerender’s crawler (UA contains "Prerender"), are served from your origin (assets/SPA). So Prerender just gets your real pages.
+- **When `ENABLE_PRERENDER=true`:** Requests that look like crawlers are sent to the Prerender API (using `PRERENDER_BASE` + `PRERENDER_TOKEN`); Prerender returns rendered HTML and the Worker serves that. So search engines and Prerender’s own crawler get prerendered content.
 
-If the integration lets you set a **verification URL**, use one of the above.  
-Test in a browser or with:
+So Prerender is integrated at the CDN/Worker level, as they expect.
 
-```bash
-curl -I https://weird-animals.belmin.workers.dev/verify
-```
+## Why “verification” can fail on `*.workers.dev`
 
-You should see `200 OK`.
+The dashboard check is: “Can we fetch your URL?” If that fails, it’s usually because:
 
-## 2. Likely cause: Cloudflare is blocking the verifier
+- **Cloudflare is blocking or challenging the request** before it reaches your Worker. The `*.workers.dev` hostname is on Cloudflare’s zone; they may apply bot/challenge rules to requests from Prerender’s IPs. You cannot change those rules for `*.workers.dev`.
+- So Prerender’s servers may get a **403, 503, or a challenge page** instead of your Worker’s 200.
 
-**\*.workers.dev** is Cloudflare’s domain. They may apply **bot / security** rules (Bot Fight Mode, challenges) to requests from the integration’s servers **before** the request hits your Worker. You cannot turn that off for `*.workers.dev`.
+Your Worker is configured correctly; the failure is at the **hostname/zone** level, not the integration logic.
 
-**Options:**
+## What to do
 
-- **Use your own domain**  
-  Add a **custom domain** to your Worker in the Cloudflare dashboard (e.g. `weird-animals.yourdomain.com`). Then in the integration, **add and verify that domain** instead of `weird-animals.belmin.workers.dev`. On your own zone you can relax WAF / bot rules or allowlist the integration’s IPs.
+1. **Use a custom domain (recommended)**  
+   Add a **custom domain** to this Worker in Cloudflare (e.g. `weird-animals.yourdomain.com`).  
+   In Prerender, **add and “verify” that domain** instead of `weird-animals.belmin.workers.dev`.  
+   On your own domain you control WAF/bot rules and can allowlist Prerender’s IPs if needed.
 
-- **Whitelist the integration’s IPs**  
-  If the integration documents **IP addresses** to allow, and you use a **custom domain** on a zone you control, add a WAF rule or allowlist so those IPs are not challenged/blocked.
+2. **Allowlist Prerender’s IPs (if you use a custom domain)**  
+   If Prerender provides a list of IPs, add a WAF allowlist for those IPs on the zone that serves your custom domain so their crawler is not challenged.
 
-- **Ask the integration**  
-  Contact their support and say: “Verification fails for my Workers URL. Do you support a custom verification URL (e.g. `https://my-site.com/verify`)? Can you provide the IPs your verifier uses so I can allowlist them on my domain?”
+3. **Optional: ask Prerender for IPs**  
+   You can ask: “Which IPs do you use when crawling our origin so we can allowlist them on our custom domain?” and then allowlist them in Cloudflare for that domain.
 
-## 3. Confirm the Worker URL
+## Summary
 
-Your Worker’s public URL is determined by **`name` in `wrangler.toml`** and your account subdomain. If your repo/project is `weird-animals2` but `wrangler.toml` has `name = "weird-animals"`, the URL is:
-
-- `https://weird-animals.<YOUR_SUBDOMAIN>.workers.dev`
-
-Replace `<YOUR_SUBDOMAIN>` with your actual subdomain (e.g. `belmin`). Use that exact URL in the integration.
-
-## 4. Quick checklist
-
-- [ ] Deploy the latest Worker (with the `/verify` and `/.well-known/prerender-verify` routes).
-- [ ] Test: `curl -I https://weird-animals.belmin.workers.dev/verify` returns 200.
-- [ ] If the integration allows a custom verification URL, use one of the paths in section 1.
-- [ ] Prefer adding a **custom domain** and verifying that domain instead of `*.workers.dev`.
-- [ ] If you use a custom domain, whitelist the integration’s IPs if they provide them.
+- No special verification URL or meta tag is required; your Worker already integrates Prerender at the proxy level.
+- Verification fails on `*.workers.dev` because Cloudflare’s global bot/security for that host can block Prerender’s requests.
+- Use a **custom domain** for this Worker and verify that domain in Prerender; that’s the reliable fix.
