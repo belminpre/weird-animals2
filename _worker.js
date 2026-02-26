@@ -100,7 +100,7 @@ export default {
       if (!prerenderEnabled || !isCrawler(request)) {
         const res = await env.ASSETS.fetch(request);
         if (res && res.status !== 404) return res;
-        return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+        return await env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
       }
     }
 

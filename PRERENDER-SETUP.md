@@ -29,12 +29,22 @@ Our site is currently only available on a Cloudflare Workers subdomain (`https:/
 
 You’re already using Cloudflare (Worker + env vars). To get Prerender working and verification passing:
 
-### 1. Add a custom domain to the Worker
+### 1. Add a custom domain or subdomain to the Worker
 
 1. Cloudflare Dashboard → **Workers & Pages** → project **weird-animals**.
 2. **Settings** → **Domains & routes** (or **Triggers** → **Custom Domains**).
-3. **Add Custom Domain** → enter a hostname you own (e.g. `weird-animals.yourdomain.com`).
-4. Add the CNAME (or A/AAAA) record Cloudflare shows to your DNS (at your registrar or Cloudflare DNS if the zone is there). Wait until the domain shows as **Active**.
+3. **Add Custom Domain** → enter your hostname (e.g. `weird-animals.duckdns.org` or `weird-animals.yourdomain.com`).
+4. Add the CNAME (or A/AAAA) record Cloudflare shows to your DNS (DuckDNS, Freenom, your registrar, etc.). Wait until the domain shows as **Active**.
+
+**Routes (subdomains)** — Cloudflare is route-based; Prerender’s guide supports subdomains with patterns like:
+
+| You want | Route pattern |
+|----------|----------------|
+| One specific subdomain (e.g. your site) | `weird-animals.duckdns.org/*` |
+| Any subdomain on a domain you own | `*.yourdomain.com/*` |
+| Multiple specific subdomains | `sub1.yourdomain.com/*` and `sub2.yourdomain.com/*` (or one route with regex) |
+
+The `/*` is required so all paths are matched, not just the root. For this project you only need the single custom hostname (step 3); the route is created when you add it. The table above is for reference if you later use multiple subdomains or a dedicated Prerender proxy Worker.
 
 ### 2. Allowlist Prerender’s IPs on your domain
 
@@ -71,4 +81,6 @@ Redeploy if needed. Then crawler traffic to your custom domain will be sent to P
 | Prerender IP list | https://ipranges.prerender.io/ipranges-all.txt |
 | Prerender IP/UA docs | https://docs.prerender.io/docs/ip-addresses , https://docs.prerender.io/docs/how-can-i-whitelist-prerenders-ip-addresses-and-user-agents |
 | Worker env for crawler prerender | `ENABLE_PRERENDER=true`, `PRERENDER_BASE`, `PRERENDER_TOKEN` |
+| **Staging** (use staging API) | `PRERENDER_BASE` = `https://private-cache.internal.prerender-staging.dev` |
+| **Production** | `PRERENDER_BASE` = `https://service.prerender.io` |
 | User-Agent | Contains `Prerender` (already handled in `_worker.js`) |

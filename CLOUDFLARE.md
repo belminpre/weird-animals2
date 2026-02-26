@@ -23,12 +23,41 @@ cp _worker.js dist && npx wrangler pages deploy ./dist
 
 `_worker.js` must be inside the deployed directory for Pages to use it.
 
+## Local deploy when `wrangler login` fails (403 / bot challenge)
+
+Use an **API token** so Wrangler doesn’t need browser OAuth:
+
+1. In Cloudflare: **Profile** → **API Tokens** → **Create Token** → use a template that includes **Workers** (e.g. “Edit Cloudflare Workers”) or create a custom token with **Account** → **Cloudflare Workers Scripts** → **Edit**.
+2. Create the token and copy the value.
+3. In your terminal (from the project directory, after `npm run build`):
+   ```bash
+   export CLOUDFLARE_API_TOKEN="your_token_here"
+   npx wrangler deploy
+   ```
+   Or run in one line: `CLOUDFLARE_API_TOKEN="your_token_here" npx wrangler deploy`
+
+No browser login is used; the token is enough for deploy.
+
+## Deploy via Git (no local Wrangler)
+
+Push to the connected repo; Cloudflare runs **Build command** and **Deploy command** and deploys the Worker. Ensure the latest `_worker.js` and code are committed and pushed.
+
 ## Local / CI
 
 From the repo root:
 
 ```bash
-npm run deploy:pages
+npm install && npm run build && npx wrangler deploy
 ```
 
-Runs: build → copy `_worker.js` into `dist/` → `wrangler pages deploy ./dist`.
+If you use Pages deploy: `npm run deploy:pages` (build → copy `_worker.js` into `dist/` → `wrangler pages deploy ./dist`).
+
+## Prerender (Worker env vars)
+
+In **Workers & Pages** → **weird-animals** → **Settings** → **Variables and secrets** set:
+
+- **ENABLE_PRERENDER** = `true`
+- **PRERENDER_BASE** = `https://private-cache.internal.prerender-staging.dev` (staging) or `https://service.prerender.io` (production)
+- **PRERENDER_TOKEN** = your Prerender API token
+
+Redeploy after changing. See **PRERENDER-SETUP.md** for full setup.
