@@ -145,10 +145,11 @@ export default {
     }
     if (res && res.status !== 404) return res;
 
-    // 5) SPA fallback — fetch root (same as homepage) so ASSETS serves index.html
+    // 5) SPA fallback — fetch root via subrequest so we get the same response as homepage
     try {
       const rootUrl = new URL("/", url).toString();
-      const spaRes = await env.ASSETS.fetch(new Request(rootUrl, { method: "GET" }));
+      const spaRes = await fetch(new Request(rootUrl, { method: "GET", headers: { "Accept": "text/html" } }));
+      if (!spaRes.ok) throw new Error("root fetch failed");
       if (prerenderAttempted) {
         const h = new Headers(spaRes.headers);
         h.set("X-Prerender-Attempted", "1");
