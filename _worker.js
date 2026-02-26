@@ -59,9 +59,11 @@ export default {
       if (res && res.status !== 404) return res;
     }
 
-    // 2b) Domain verification: serve real site so verifier sees expected response (skip Prerender)
+    // 2b) Domain verification / root: serve real site so verifier sees expected response (skip Prerender)
     const ua = (request.headers.get("user-agent") || "").toLowerCase();
+    const isRoot = pathname === "/" || pathname === "" || pathname === "/index.html";
     const isVerification =
+      isRoot ||
       /prerender.*verify|verify.*prerender|domain.*verif/i.test(ua) ||
       /[?&](prerender_?verify|domain_?verify|verify)=/i.test(url.search) ||
       /^\/(prerender-verify|\.well-known\/prerender)/i.test(pathname);
@@ -71,7 +73,7 @@ export default {
       return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
     }
 
-    // 3) Prerender: crawlers only, when staging/production env is set
+    // 3) Prerender: crawlers only (non-root pages), when staging/production env is set
     const base = env.PRERENDER_BASE;
     const token = env.PRERENDER_TOKEN;
     if (base && token && isCrawler(request)) {
