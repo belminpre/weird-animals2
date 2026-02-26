@@ -105,9 +105,11 @@ export default {
     }
 
     // 3) Prerender: only when ENABLE_PRERENDER=true (off by default so domain verification hits real site)
+    let prerenderAttempted = false;
     const base = env.PRERENDER_BASE;
     const token = env.PRERENDER_TOKEN;
     if (prerenderEnabled && base && token && isCrawler(request)) {
+      prerenderAttempted = true;
       try {
         // Full URL so Prerender knows which page to render (staging expects this)
         const prerenderUrl = `${base.replace(/\/$/, "")}/${url.href}`;
@@ -122,6 +124,7 @@ export default {
         if (prerenderRes.ok) {
           const headers = new Headers(prerenderRes.headers);
           headers.set("X-Prerender", "true");
+          headers.set("Cache-Control", "no-store"); // avoid caching prerendered HTML for crawlers
           return new Response(prerenderRes.body, {
             status: prerenderRes.status,
             statusText: prerenderRes.statusText,
@@ -139,7 +142,14 @@ export default {
 
     // 5) SPA fallback
     try {
-      return await env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+      const spaRes = await env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+      if (prerenderAttempted) {
+        const h = new Headers(spaRes.headers);
+        h.set("X-Prerender-Attempted", "1");
+        h.set("Cache-Control", "no-store");
+        return new Response(spaRes.body, { status: spaRes.status, headers: h });
+      }
+      return spaRes;
     } catch (e) {
       return new Response("Not Found", { status: 404 });
     }
