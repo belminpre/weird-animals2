@@ -1,0 +1,19 @@
+{
+  "name": "Aye-aye",
+  "scientificName": "Daubentonia madagascariensis",
+  "category": "nocturnal-oddities",
+  "habitat": "Rainforest canopy and bamboo thickets",
+  "location": "Madagascar",
+  "description": "The aye-aye is Madagascar's strangest primate, with bat-like ears, beaver-like teeth, and a skeletal middle finger used for tapping trees and extracting insect larvae. Local superstitions consider it a harbinger of bad luck, making it one of the most persecuted animals on Earth.",
+  "funFacts": [
+    "Uses echolocation-like tapping to find insect larvae in wood",
+    "Has a specialized skeletal middle finger that grows continuously",
+    "Builds a new nest every night in the treetops",
+    "Is the world's largest nocturnal primate",
+    "Locals believe seeing one brings death, leading to persecution"
+  ],
+  "conservationStatus": "Endangered",
+  "image": "/uploads/aye-aye.jpg",
+  "size": "36-44 cm (14-17 inches) body length",
+  "diet": "Omnivore"
+}

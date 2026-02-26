@@ -1,0 +1,19 @@
+{
+  "name": "Dumbo Octopus",
+  "scientificName": "Grimpoteuthis",
+  "category": "deep-sea-creatures",
+  "habitat": "Deep ocean floor and water column",
+  "location": "Deep waters worldwide (3000-7000m depth)",
+  "description": "The dumbo octopus is the deepest-living octopus species, residing at crushing depths where sunlight never reaches. Named for its ear-like fins that resemble Disney's Dumbo elephant, it gracefully flaps through the abyssal darkness like an underwater ghost.",
+  "funFacts": [
+    "Lives deeper than any other octopus species",
+    "Ear-like fins make it look like it's flying underwater",
+    "Can swallow prey whole due to lack of ink sac",
+    "Has no breeding season - can reproduce anytime",
+    "Some species glow in the dark with bioluminescence"
+  ],
+  "conservationStatus": "Data Deficient",
+  "image": "/uploads/dumbo-octopus.jpg",
+  "size": "20-30 cm (8-12 inches)",
+  "diet": "Carnivore"
+}

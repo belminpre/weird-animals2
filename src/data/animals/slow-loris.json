@@ -1,0 +1,19 @@
+{
+  "name": "Slow Loris",
+  "scientificName": "Nycticebus",
+  "category": "venomous-oddities",
+  "habitat": "Tropical rainforest canopy",
+  "location": "Southeast Asia",
+  "description": "The slow loris is the world's only venomous primate. This adorable-looking creature produces toxins in glands on its elbows, which it licks and mixes with saliva to create a venomous bite. Despite its cute appearance, it's one of the most dangerous small mammals.",
+  "funFacts": [
+    "Only venomous primate in the world",
+    "Produces toxin from elbow glands mixed with saliva",
+    "Has a grip so strong it can hang from branches all night",
+    "Eyes reflect light like a cat's in the dark",
+    "Illegally captured for pet trade due to cute appearance"
+  ],
+  "conservationStatus": "Vulnerable",
+  "image": "/uploads/slow-loris.jpg",
+  "size": "18-38 cm (7-15 inches)",
+  "diet": "Omnivore"
+}

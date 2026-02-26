@@ -1,0 +1,19 @@
+{
+  "name": "Emperor Penguin",
+  "scientificName": "Aptenodytes forsteri",
+  "category": "Birds",
+  "habitat": "Antarctic ice and surrounding waters",
+  "location": "Antarctica",
+  "description": "Emperor penguins are the tallest and heaviest of all penguin species, renowned for their incredible parenting dedication. Males incubate eggs on their feet for 64 days during the harsh Antarctic winter, often without eating.",
+  "funFacts": [
+    "Males incubate eggs on their feet for 64 days during Antarctic winter",
+    "Can dive to depths of over 500 meters (1,640 feet)",
+    "Can hold their breath for up to 22 minutes underwater",
+    "Huddle together in groups of thousands to stay warm",
+    "Chicks are born with gray fluffy down feathers"
+  ],
+  "conservationStatus": "Near Threatened",
+  "image": "/uploads/emperor-penguin.jpg",
+  "size": "100-130 cm (39-51 inches) tall",
+  "diet": "Piscivore"
+}

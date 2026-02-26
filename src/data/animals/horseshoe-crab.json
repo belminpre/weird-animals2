@@ -1,0 +1,19 @@
+{
+  "name": "Horseshoe Crab",
+  "scientificName": "Limulus polyphemus",
+  "category": "living-fossils",
+  "habitat": "Shallow coastal waters and sandy beaches",
+  "location": "Atlantic coast of North America",
+  "description": "Horseshoe crabs have remained virtually unchanged for 450 million years, predating dinosaurs, trees, and even sharks. Despite their name, they're more closely related to spiders than crabs. Their blue blood is harvested for medical research and is worth $60,000 per gallon.",
+  "funFacts": [
+    "Unchanged for 450 million years - older than dinosaurs",
+    "More closely related to spiders than crabs",
+    "Has 10 eyes including UV and polarized light detection",
+    "Blue blood worth $60,000 per gallon for medical testing",
+    "Can survive a year without food"
+  ],
+  "conservationStatus": "Vulnerable",
+  "image": "/uploads/horseshoe-crab.jpg",
+  "size": "14-19 inches (35-48 cm) long",
+  "diet": "Omnivore"
+}

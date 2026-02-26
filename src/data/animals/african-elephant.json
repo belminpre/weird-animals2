@@ -1,0 +1,19 @@
+{
+  "name": "African Elephant",
+  "scientificName": "Loxodonta africana",
+  "category": "Mammals",
+  "habitat": "Savannas, grasslands, and forests",
+  "location": "Sub-Saharan Africa",
+  "description": "The African elephant is the largest living terrestrial animal and is distinguished by its enormous ears, which are shaped like the African continent. These gentle giants play a crucial role in their ecosystem by creating water holes and dispersing seeds.",
+  "funFacts": [
+    "Can weigh up to 6 tons and consume 300 pounds of vegetation daily",
+    "Their ears can be up to 6 feet wide and help regulate body temperature",
+    "Have excellent memories and can recognize hundreds of individuals",
+    "Can live up to 70 years in the wild",
+    "Use their trunks as a fifth limb with over 40,000 muscles"
+  ],
+  "conservationStatus": "Endangered",
+  "image": "/uploads/african-elephant.jpg",
+  "size": "3-4 meters (10-13 feet) tall",
+  "diet": "Herbivore"
+}

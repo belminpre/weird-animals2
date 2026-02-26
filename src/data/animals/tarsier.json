@@ -1,0 +1,19 @@
+{
+  "name": "Tarsier",
+  "scientificName": "Carlito syrichta",
+  "category": "nocturnal-oddities",
+  "habitat": "Tropical rainforest trees",
+  "location": "Southeast Asia (Philippines, Borneo, Sumatra)",
+  "description": "Tarsiers are tiny primates with enormous eyes that cannot move in their sockets, forcing them to rotate their heads 180 degrees like owls. Each eye is larger than their brain, and they can leap 40 times their body length between trees in complete darkness.",
+  "funFacts": [
+    "Each eye weighs more than its entire brain",
+    "Cannot move their eyes so must turn their head 180 degrees",
+    "Can leap 40 times their body length between trees",
+    "Have the longest fingers relative to body size of any primate",
+    "Commit suicide in captivity due to stress - literally die of depression"
+  ],
+  "conservationStatus": "Near Threatened",
+  "image": "/uploads/tarsier.jpg",
+  "size": "10-15 cm (4-6 inches) body length",
+  "diet": "Carnivore"
+}

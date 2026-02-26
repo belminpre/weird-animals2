@@ -1,0 +1,19 @@
+{
+  "name": "Snow Leopard",
+  "scientificName": "Panthera uncia",
+  "category": "Mammals",
+  "habitat": "High mountains and alpine areas",
+  "location": "Central and South Asia mountains",
+  "description": "The snow leopard is a magnificent big cat perfectly adapted to life in harsh mountain environments. With its thick fur, powerful legs, and long tail for balance, it's one of the most elusive and beautiful predators in the world.",
+  "funFacts": [
+    "Can leap up to 50 feet in a single bound",
+    "Their large paws act like snowshoes in deep snow",
+    "Cannot roar like other big cats, but can chuff and purr",
+    "Their long tail helps with balance and can wrap around their body for warmth",
+    "Can survive in temperatures as low as -40°F (-40°C)"
+  ],
+  "conservationStatus": "Vulnerable",
+  "image": "/uploads/snow-leopard.jpg",
+  "size": "1.2-1.5 meters (4-5 feet) body length",
+  "diet": "Carnivore"
+}

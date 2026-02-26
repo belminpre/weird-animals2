@@ -1,0 +1,19 @@
+{
+  "name": "Blue-ringed Octopus",
+  "scientificName": "Hapalochlaena",
+  "category": "venomous-oddities",
+  "habitat": "Shallow tide pools and coral reefs",
+  "location": "Pacific Ocean (Australia to Japan)",
+  "description": "Despite being only the size of a golf ball, the blue-ringed octopus carries enough venom to kill 26 adult humans within minutes. When threatened, brilliant blue rings appear across its body as a warning. There is no antidote to its bite.",
+  "funFacts": [
+    "Carries enough venom to kill 26 adult humans",
+    "Only weighs 10-100 grams but is one of the world's most venomous animals",
+    "Blue rings only appear when threatened or excited",
+    "Venom causes total paralysis within minutes",
+    "No known antidote exists for its bite"
+  ],
+  "conservationStatus": "Least Concern",
+  "image": "/uploads/blue-ringed-octopus.jpg",
+  "size": "12-20 cm (5-8 inches) including tentacles",
+  "diet": "Carnivore"
+}
