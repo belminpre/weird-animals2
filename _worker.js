@@ -3,6 +3,9 @@
 //   Leave unset for domain verification so the integration sees the real site.
 // - Sitemap/robots: serve with correct XML/text headers.
 // - SPA: serve index.html for non-asset routes.
+// - Build injects index.html into EMBEDDED_INDEX_HTML for SPA fallback when ASSETS.fetch fails.
+
+const EMBEDDED_INDEX_HTML = "__EMBEDDED_INDEX_HTML__";
 
 const CRAWLER_UA =
   /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|whatsapp|telegram|applebot|petalbot|ahrefsbot|semrushbot|claudebot|gptbot|chatgpt-user|anthropic-ai|cohere-ai/i;
@@ -158,8 +161,13 @@ export default {
       }
       return spaRes;
     } catch (e) {
-      // Subrequest or ASSETS failed — return 404 but mark so we can debug (remove header later)
-      return new Response("Not Found", { status: 404, headers: { "X-SPA-Fallback": "catch", "Content-Type": "text/plain" } });
+      // ASSETS.fetch failed — serve embedded index.html so SPA loads (injected at build time)
+      if (EMBEDDED_INDEX_HTML && EMBEDDED_INDEX_HTML !== "__EMBEDDED_INDEX_HTML__") {
+        const h = new Headers({ "Content-Type": "text/html; charset=utf-8" });
+        if (prerenderAttempted) h.set("X-Prerender-Attempted", "1");
+        return new Response(EMBEDDED_INDEX_HTML, { status: 200, headers: h });
+      }
+      return new Response("Not Found", { status: 404 });
     }
     } catch (err) {
       // Any uncaught error: for asset paths return 404 so images never 500

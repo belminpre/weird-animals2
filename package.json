@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && echo '_worker.js' > dist/.assetsignore",
+    "build": "vite build && node scripts/inject-html.js && echo '_worker.js' > dist/.assetsignore",
     "deploy": "npm run build && npx wrangler deploy",
     "deploy:pages": "npm run build && cp _worker.js dist && npx wrangler pages deploy ./dist",
     "lint": "eslint .",

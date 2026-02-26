@@ -3,7 +3,7 @@
 
 name = "weird-animals"
 compatibility_date = "2024-01-01"
-main = "_worker.js"
+main = "dist/_worker.js"
 
 [assets]
 directory = "./dist"
