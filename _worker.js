@@ -137,7 +137,12 @@ export default {
     }
 
     // 4) Try static asset (e.g. index.html for /)
-    const res = await env.ASSETS.fetch(request);
+    let res;
+    try {
+      res = await env.ASSETS.fetch(request);
+    } catch (_) {
+      res = null;
+    }
     if (res && res.status !== 404) return res;
 
     // 5) SPA fallback
