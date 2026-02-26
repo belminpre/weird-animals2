@@ -81,13 +81,14 @@ export default {
       return new Response("Not Found", { status: 404, headers: { "Content-Type": "text/plain" } });
     }
 
-    // 2b) Domain root: if request looks like a verifier/bot, serve minimal HTML with meta tag so integration can verify
+    // 2b) Domain root: if request looks like a verifier AND Prerender is off, serve minimal HTML so integration can verify
     const ua = (request.headers.get("user-agent") || "").toLowerCase();
     const isRoot = pathname === "/" || pathname === "" || pathname === "/index.html";
+    const prerenderEnabled = env.ENABLE_PRERENDER === "true" || env.ENABLE_PRERENDER === "1";
     const looksLikeVerifier =
-      /prerender|verify|validator|curl|wget|fetch|node|python|java|bot|crawler|spider|headless|phantom|selenium/i.test(ua) ||
+      /prerender.*verify|verify.*prerender|validator|curl|wget|fetch|domain.*verif/i.test(ua) ||
       /[?&](prerender_?verify|domain_?verify|verify)=/i.test(url.search);
-    if (isRoot && looksLikeVerifier) {
+    if (isRoot && looksLikeVerifier && !prerenderEnabled) {
       const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="prerender-verify" content="ok"></head><body>OK</body></html>';
       return new Response(html, {
         status: 200,
@@ -95,15 +96,17 @@ export default {
       });
     }
     if (isRoot) {
-      const res = await env.ASSETS.fetch(request);
-      if (res && res.status !== 404) return res;
-      return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+      // When Prerender is on, let crawlers fall through to the Prerender block; only serve ASSETS for non-crawlers
+      if (!prerenderEnabled || !isCrawler(request)) {
+        const res = await env.ASSETS.fetch(request);
+        if (res && res.status !== 404) return res;
+        return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
+      }
     }
 
     // 3) Prerender: only when ENABLE_PRERENDER=true (off by default so domain verification hits real site)
     const base = env.PRERENDER_BASE;
     const token = env.PRERENDER_TOKEN;
-    const prerenderEnabled = env.ENABLE_PRERENDER === "true" || env.ENABLE_PRERENDER === "1";
     if (prerenderEnabled && base && token && isCrawler(request)) {
       try {
         // Full URL so Prerender knows which page to render (staging expects this)
