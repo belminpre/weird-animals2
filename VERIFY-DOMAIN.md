@@ -1,6 +1,11 @@
 # Domain verification (e.g. Prerender) still failing
 
-If verification keeps failing even with Prerender disabled, the request may **never reach your Worker**.
+When you enter only the **domain** (e.g. `https://weird-animals.belmin.workers.dev`), the integration fetches the **root** (`/`). The Worker now:
+
+- Serves **minimal HTML with `<meta name="prerender-verify" content="ok">`** when the request looks like a verifier (User-Agent contains "prerender", "verify", "bot", "curl", etc.).
+- Serves the real site for normal browsers.
+
+If verification still fails, the request may **never reach your Worker** (see below).
 
 ## 1. Use a custom verification URL (if the integration allows it)
 

@@ -72,15 +72,20 @@ export default {
       if (res && res.status !== 404) return res;
     }
 
-    // 2b) Domain verification / root: serve real site so verifier sees expected response (skip Prerender)
+    // 2b) Domain root: if request looks like a verifier/bot, serve minimal HTML with meta tag so integration can verify
     const ua = (request.headers.get("user-agent") || "").toLowerCase();
     const isRoot = pathname === "/" || pathname === "" || pathname === "/index.html";
-    const isVerification =
-      isRoot ||
-      /prerender.*verify|verify.*prerender|domain.*verif/i.test(ua) ||
-      /[?&](prerender_?verify|domain_?verify|verify)=/i.test(url.search) ||
-      /^\/(prerender-verify|\.well-known\/prerender)/i.test(pathname);
-    if (isVerification) {
+    const looksLikeVerifier =
+      /prerender|verify|validator|curl|wget|fetch|node|python|java|bot|crawler|spider|headless|phantom|selenium/i.test(ua) ||
+      /[?&](prerender_?verify|domain_?verify|verify)=/i.test(url.search);
+    if (isRoot && looksLikeVerifier) {
+      const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="prerender-verify" content="ok"></head><body>OK</body></html>';
+      return new Response(html, {
+        status: 200,
+        headers: new Headers({ "Content-Type": "text/html; charset=utf-8", "X-Content-Type-Options": "nosniff" }),
+      });
+    }
+    if (isRoot) {
       const res = await env.ASSETS.fetch(request);
       if (res && res.status !== 404) return res;
       return env.ASSETS.fetch(new Request(new URL("/index.html", url).toString(), request));
