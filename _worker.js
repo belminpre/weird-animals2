@@ -109,12 +109,13 @@ export default {
 
     // 3) Prerender: only when ENABLE_PRERENDER=true (off by default so domain verification hits real site)
     let prerenderAttempted = false;
+    let prerenderStatus = null; // set when Prerender returns non-2xx so we can expose it in headers
     const base = env.PRERENDER_BASE;
     const token = env.PRERENDER_TOKEN;
     if (prerenderEnabled && base && token && isCrawler(request)) {
       prerenderAttempted = true;
       try {
-        // Full URL so Prerender knows which page to render (staging expects this)
+        // Same format as docs: GET base + "/" + full URL, header X-Prerender-Token
         const prerenderUrl = `${base.replace(/\/$/, "")}/${url.href}`;
         const prerenderReq = new Request(prerenderUrl, {
           method: "GET",
@@ -127,15 +128,16 @@ export default {
         if (prerenderRes.ok) {
           const headers = new Headers(prerenderRes.headers);
           headers.set("X-Prerender", "true");
-          headers.set("Cache-Control", "no-store"); // avoid caching prerendered HTML for crawlers
+          headers.set("Cache-Control", "no-store");
           return new Response(prerenderRes.body, {
             status: prerenderRes.status,
             statusText: prerenderRes.statusText,
             headers,
           });
         }
+        prerenderStatus = prerenderRes.status; // e.g. 403, 500 — so fallback can expose it
       } catch (e) {
-        // Fall through to SPA on prerender failure
+        prerenderStatus = "error"; // fetch threw (network, etc.)
       }
     }
 
@@ -156,6 +158,7 @@ export default {
       if (prerenderAttempted) {
         const h = new Headers(spaRes.headers);
         h.set("X-Prerender-Attempted", "1");
+        if (prerenderStatus != null) h.set("X-Prerender-Status", String(prerenderStatus));
         h.set("Cache-Control", "no-store");
         return new Response(spaRes.body, { status: spaRes.status, headers: h });
       }
@@ -164,7 +167,10 @@ export default {
       // ASSETS.fetch failed — serve embedded index.html so SPA loads (injected at build time)
       if (EMBEDDED_INDEX_HTML && EMBEDDED_INDEX_HTML !== "__EMBEDDED_INDEX_HTML__") {
         const h = new Headers({ "Content-Type": "text/html; charset=utf-8" });
-        if (prerenderAttempted) h.set("X-Prerender-Attempted", "1");
+        if (prerenderAttempted) {
+          h.set("X-Prerender-Attempted", "1");
+          if (prerenderStatus != null) h.set("X-Prerender-Status", String(prerenderStatus));
+        }
         return new Response(EMBEDDED_INDEX_HTML, { status: 200, headers: h });
       }
       return new Response("Not Found", { status: 404 });
