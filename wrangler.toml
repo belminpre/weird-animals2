@@ -5,11 +5,10 @@ name = "weird-animals"
 compatibility_date = "2024-01-01"
 main = "dist/_worker.js"
 
-# Prerender: vars here so Worker gets them at runtime (dashboard vars often don't bind on Git deploy).
-# Set PRERENDER_TOKEN once: npx wrangler secret put PRERENDER_TOKEN
+# Prerender staging: token u Workers → weird-animals → Settings → Variables and secrets (Production), ne u Build env.
 [vars]
 ENABLE_PRERENDER = "true"
-PRERENDER_BASE = "https://service.prerender.io"
+PRERENDER_BASE = "https://private-cache.internal.prerender-staging.dev"
 
 [assets]
 directory = "./dist"
