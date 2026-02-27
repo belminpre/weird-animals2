@@ -54,10 +54,12 @@ If you use Pages deploy: `npm run deploy:pages` (build → copy `_worker.js` int
 
 ## Prerender (Worker env vars)
 
-In **Workers & Pages** → **weird-animals** → **Settings** → **Variables and secrets** set:
+- **ENABLE_PRERENDER** and **PRERENDER_BASE** are set in `wrangler.toml` so the Worker gets them on every deploy (including Git).
+- **PRERENDER_TOKEN** is a secret. Set it once from your machine (then Git deploys keep using it):
 
-- **ENABLE_PRERENDER** = `true`
-- **PRERENDER_BASE** = `https://private-cache.internal.prerender-staging.dev` (staging) or `https://service.prerender.io` (production)
-- **PRERENDER_TOKEN** = your Prerender API token
+  ```bash
+  npx wrangler secret put PRERENDER_TOKEN
+  ```
+  Paste your Prerender API token when prompted. Token is stored in Cloudflare and bound to the Worker **weird-animals**.
 
-Redeploy after changing. See **PRERENDER-SETUP.md** for full setup.
+See **PRERENDER-SETUP.md** for full setup.
