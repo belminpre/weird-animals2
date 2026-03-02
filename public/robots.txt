@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://weirdanimals.life/sitemap.xml
+Sitemap: https://weird-animals.belmin.workers.dev/sitemap.xml

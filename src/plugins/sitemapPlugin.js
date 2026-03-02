@@ -1,7 +1,8 @@
 import path from "path";
 import fs from "fs";
 
-const BASE_URL = 'https://weirdanimals.life';
+// Use VITE_SITE_URL at build time, or default to workers.dev deployment
+const BASE_URL = process.env.VITE_SITE_URL || 'https://weird-animals.belmin.workers.dev';
 
 const getJsonFiles = (dir) => {
   try {
