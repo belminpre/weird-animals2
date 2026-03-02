@@ -7,6 +7,18 @@ import CategoryDetailPage from "./pages/CategoriesDetailPage";
 import AnimalDetailPage from "./pages/AnimalDetailsPage";
 
 function NotFoundPage() {
+  React.useEffect(() => {
+    let meta = document.querySelector('meta[name="prerender-status-code"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "prerender-status-code");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", "404");
+    return () => {
+      meta.remove();
+    };
+  }, []);
   return (
     <main className="max-w-2xl mx-auto px-4 py-16 text-center">
       <h1 className="text-2xl font-bold text-gray-800 mb-2">Page not found</h1>
