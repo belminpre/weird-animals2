@@ -59,6 +59,19 @@ export default {
       });
     }
 
+    // 0b) 404 Checker / bogus URLs — return hard 404 so Prerender and checker see proper status
+    if (pathname.includes("404check")) {
+      const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="prerender-status-code" content="404"><title>Page not found</title></head><body><h1>Page not found</h1><p>The page you're looking for doesn't exist.</p></body></html>`;
+      return new Response(html, {
+        status: 404,
+        headers: new Headers({
+          "Content-Type": "text/html; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+          "Cache-Control": "public, max-age=300, s-maxage=300",
+        }),
+      });
+    }
+
     // 1) Sitemap and robots — serve from assets with correct headers, cacheable
     if (/^\/(sitemap.*\.xml|robots\.txt)$/i.test(pathname)) {
       const assetRes = await env.ASSETS.fetch(request);
