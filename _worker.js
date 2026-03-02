@@ -59,7 +59,7 @@ export default {
       });
     }
 
-    // 1) Sitemap and robots — serve from assets with correct headers
+    // 1) Sitemap and robots — serve from assets with correct headers, cacheable
     if (/^\/(sitemap.*\.xml|robots\.txt)$/i.test(pathname)) {
       const assetRes = await env.ASSETS.fetch(request);
       if (!assetRes || assetRes.status === 404) return new Response("Not found", { status: 404 });
@@ -70,6 +70,7 @@ export default {
         headers.set("Content-Type", "text/plain; charset=utf-8");
       }
       headers.set("X-Content-Type-Options", "nosniff");
+      headers.set("Cache-Control", "public, max-age=3600, s-maxage=3600");
       return new Response(assetRes.body, { status: assetRes.status, statusText: assetRes.statusText, headers });
     }
 
