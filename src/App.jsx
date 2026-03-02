@@ -6,6 +6,15 @@ import CategoriesPage from "./pages/CategoriesPage";
 import CategoryDetailPage from "./pages/CategoriesDetailPage";
 import AnimalDetailPage from "./pages/AnimalDetailsPage";
 
+function NotFoundPage() {
+  return (
+    <main className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">Page not found</h1>
+      <p className="text-gray-600">The page you’re looking for doesn’t exist.</p>
+    </main>
+  );
+}
+
 function App() {
   const location =
     typeof window !== "undefined" ? window.location : { pathname: "/" };
@@ -26,6 +35,7 @@ function App() {
             element={<CategoryDetailPage />}
           />
           <Route path="/animal/:animalId" element={<AnimalDetailPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </Router>

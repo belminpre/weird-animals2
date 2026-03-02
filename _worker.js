@@ -128,7 +128,7 @@ export default {
         if (prerenderRes.ok) {
           const headers = new Headers(prerenderRes.headers);
           headers.set("X-Prerender", "true");
-          headers.set("Cache-Control", "no-store");
+          headers.set("Cache-Control", "public, max-age=300, s-maxage=300");
           return new Response(prerenderRes.body, {
             status: prerenderRes.status,
             statusText: prerenderRes.statusText,
@@ -159,14 +159,17 @@ export default {
         const h = new Headers(spaRes.headers);
         h.set("X-Prerender-Attempted", "1");
         if (prerenderStatus != null) h.set("X-Prerender-Status", String(prerenderStatus));
-        h.set("Cache-Control", "no-store");
+        h.set("Cache-Control", "public, max-age=300, s-maxage=300");
         return new Response(spaRes.body, { status: spaRes.status, headers: h });
       }
-      return spaRes;
+      const h = new Headers(spaRes.headers);
+      h.set("Cache-Control", "public, max-age=300, s-maxage=300");
+      return new Response(spaRes.body, { status: spaRes.status, headers: h });
     } catch (e) {
       // ASSETS.fetch failed — serve embedded index.html so SPA loads (injected at build time)
       if (EMBEDDED_INDEX_HTML && EMBEDDED_INDEX_HTML !== "__EMBEDDED_INDEX_HTML__") {
         const h = new Headers({ "Content-Type": "text/html; charset=utf-8" });
+        h.set("Cache-Control", "public, max-age=300, s-maxage=300");
         if (prerenderAttempted) {
           h.set("X-Prerender-Attempted", "1");
           if (prerenderStatus != null) h.set("X-Prerender-Status", String(prerenderStatus));
