@@ -21,7 +21,17 @@ Requests from Prerender’s rendering service use a Prerender-specific User-Agen
 
 **4. workers.dev / no custom domain**
 
-Our site is currently only available on a Cloudflare Workers subdomain (`https://weird-animals.belmin.workers.dev`). Cloudflare’s protections on `*.workers.dev` likely block or challenge Prerender’s requests. There is no special bypass or manual approval flow on the Prerender side. The recommended approach is to serve the Worker behind a **custom domain** we control, then configure Prerender and our Cloudflare rules (including IP/User-Agent allowlisting) on that custom domain.
+Our site is currently only available on a Cloudflare Workers subdomain (`https://weird-animals.belmin.workers.dev`). Prerender can still be used: set `ENABLE_PRERENDER`, `PRERENDER_BASE`, and `PRERENDER_TOKEN` (as a Secret) in the Worker’s **Runtime** Variables and secrets (Workers & Pages → weird-animals → Settings → Variables and secrets), not only in Build env. For a custom domain, add the Worker to your domain and configure IP/UA allowlisting there.
+
+### Verifying Prerender is serving bots (no domain)
+
+Request the site with a bot User-Agent (e.g. Googlebot). In the response headers you should see:
+
+- `x-prerender: true`
+- `x-prerender-requestid` (Prerender’s request ID — confirms Prerender rendered the page)
+- `x-processed-by-prerender: true`
+
+Example: `curl -sI -A "Googlebot" "https://weird-animals.belmin.workers.dev/categories"` and check for those headers. In Chrome DevTools: Network conditions → User agent: Googlebot, reload, then inspect the document request’s Response Headers for `x-prerender-requestid`.
 
 ---
 
