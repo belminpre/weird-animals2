@@ -90,7 +90,7 @@ export const animals: Animal[] = [
     ],
     conservationStatus: "Least Concern",
     image:
-      "https://images.pexels.com/photos/39857/fox-animal-nature-forest-39857.jpeg",
+      "https://picsum.photos/seed/fennec-fox/800/600",
     size: "20-40 cm (8-16 inches)",
     diet: "Insects, small mammals, birds, eggs",
   },

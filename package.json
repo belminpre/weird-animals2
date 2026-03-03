@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "serve:public": "http-server ./public -p 8080",
-    "serve:backend": "npx decap-server"
+    "serve:backend": "npx decap-server",
+    "check:images": "node scripts/check-image-urls.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.539.0",
