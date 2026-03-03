@@ -91,7 +91,13 @@ export default {
     if (isAssetPath(pathname)) {
       try {
         const res = await env.ASSETS.fetch(request);
-        if (res && res.status === 200) return res;
+        if (res && res.status === 200) {
+          const h = new Headers(res.headers);
+          if (pathname.startsWith("/assets/")) {
+            h.set("Access-Control-Allow-Origin", "*");
+          }
+          return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h });
+        }
       } catch (_) {
         // ASSETS.fetch can throw for missing files
       }
