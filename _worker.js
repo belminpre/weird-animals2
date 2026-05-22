@@ -21,8 +21,9 @@ export default {
     const url = new URL(request.url);
     const { pathname, origin } = url;
 
-    // ===== PRE-2735 DEBUG ENDPOINT =====
-    if (url.searchParams.has("debug")) {
+    // ===== PRE-2735 TEST ENDPOINTS =====
+    // Paths under /__pre2735/ don't exist in dist/, so they bypass static asset serving.
+    if (pathname === "/__pre2735/debug") {
       return new Response(
         JSON.stringify(
           {
@@ -40,21 +41,21 @@ export default {
       );
     }
 
-    // ===== PRE-2735 TEST FIXTURES =====
-    //   ?test=happy     → 200 with x-prerender-requestid header AND meta tag (control)
-    //   ?test=stripped  → 200 with meta tag only (CDN-strips-header scenario, fix target)
-    //   ?test=broken    → 200 with neither (negative case)
-    const testMode = url.searchParams.get("test");
-    if (testMode === "happy" || testMode === "stripped" || testMode === "broken") {
+    if (
+      pathname === "/__pre2735/happy" ||
+      pathname === "/__pre2735/stripped" ||
+      pathname === "/__pre2735/broken"
+    ) {
+      const mode = pathname.split("/").pop();
       const headers = new Headers({ "content-type": "text/html; charset=utf-8" });
-      if (testMode === "happy") {
+      if (mode === "happy") {
         headers.set("x-prerender-requestid", "test-rid-happy");
       }
       const metaTag =
-        testMode === "broken"
+        mode === "broken"
           ? ""
           : '<meta rel="x-prerender-request-id" content="test-rid-meta">';
-      const body = `<!DOCTYPE html><html><head><meta charset="UTF-8">${metaTag}<title>PRE-2735 ${testMode}</title></head><body>ok</body></html>`;
+      const body = `<!DOCTYPE html><html><head><meta charset="UTF-8">${metaTag}<title>PRE-2735 ${mode}</title></head><body>ok</body></html>`;
       return new Response(body, { status: 200, headers });
     }
     // ===== /PRE-2735 =====
@@ -147,7 +148,6 @@ export default {
             const headers = new Headers(prerenderRes.headers);
             headers.set("X-Prerender", "true");
             headers.set("Cache-Control", "public, max-age=300, s-maxage=300");
-            // PRE-2735 test toggle: simulate a CDN stripping x-prerender-requestid.
             if (url.searchParams.has("strip_header") || env.STRIP_PRERENDER_HEADER === "true") {
               headers.delete("x-prerender-requestid");
             }
