@@ -1,25 +1,27 @@
-var __defProp = Object.defineProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var EMBEDDED_INDEX_HTML = "__EMBEDDED_INDEX_HTML__";
 
-// dist/_worker.js
-var EMBEDDED_INDEX_HTML = '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <!-- For domain verification: integration may look for this on the homepage -->\n    <meta name="prerender-verify" content="ok" />\n    <link rel="icon" type="image/svg+xml" href="/vite.svg" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <title>Weird Animals</title>\n    <meta name="description" content="Discover weird and wonderful animals from around the world. Explore rare species, deep-sea creatures, living fossils, and more." />\n    <!-- Open Graph -->\n    <meta property="og:title" content="Weird Animals" />\n    <meta property="og:type" content="website" />\n    <meta property="og:url" content="https://weird-animals.belmin.workers.dev/" />\n    <meta property="og:description" content="Discover weird and wonderful animals from around the world. Explore rare species, deep-sea creatures, living fossils, and more." />\n    <meta property="og:image" content="https://weird-animals.belmin.workers.dev/vite.svg" />\n    <script type="module" crossorigin src="/assets/index-TVa0KwtZ.js"><\/script>\n    <link rel="stylesheet" crossorigin href="/assets/index-msRTewup.css">\n  </head>\n  <body>\n    <div id="root"></div>\n  </body>\n</html>\n';
-var CRAWLER_UA = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|whatsapp|telegram|applebot|petalbot|ahrefsbot|semrushbot|claudebot|gptbot|chatgpt-user|anthropic-ai|cohere-ai/i;
+const CRAWLER_UA = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|whatsapp|telegram|applebot|petalbot|ahrefsbot|semrushbot|claudebot|gptbot|chatgpt-user|anthropic-ai|cohere-ai/i;
+
 function isCrawler(request) {
   const ua = request.headers.get("user-agent") || "";
   return CRAWLER_UA.test(ua);
 }
-__name(isCrawler, "isCrawler");
+
 function isAssetPath(pathname) {
-  return pathname.startsWith("/uploads/") || /\.(js|css|ico|svg|png|jpg|jpeg|gif|webp|woff2?|ttf|map|json)(\?.*)?$/i.test(pathname) || pathname.startsWith("/assets/") || pathname.startsWith("/admin");
+  return (
+    pathname.startsWith("/uploads/") ||
+    /\.(js|css|ico|svg|png|jpg|jpeg|gif|webp|woff2?|ttf|map|json)(\?.*)?$/i.test(pathname) ||
+    pathname.startsWith("/assets/") ||
+    pathname.startsWith("/admin")
+  );
 }
-__name(isAssetPath, "isAssetPath");
-var worker_default = {
+
+export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const { pathname, origin } = url;
 
     // ===== PRE-2735 DEBUG ENDPOINT =====
-    // Hit /?debug=1 to see worker state without going through real Prerender pathway.
     if (url.searchParams.has("debug")) {
       return new Response(
         JSON.stringify(
@@ -39,10 +41,9 @@ var worker_default = {
     }
 
     // ===== PRE-2735 TEST FIXTURES =====
-    // Deterministic responses for testing IntegrationCheck without a real Prerender service.
     //   ?test=happy     → 200 with x-prerender-requestid header AND meta tag (control)
-    //   ?test=stripped  → 200 with meta tag only (the CDN-strips-header scenario, fix target)
-    //   ?test=broken    → 200 with neither header nor meta tag (negative case)
+    //   ?test=stripped  → 200 with meta tag only (CDN-strips-header scenario, fix target)
+    //   ?test=broken    → 200 with neither (negative case)
     const testMode = url.searchParams.get("test");
     if (testMode === "happy" || testMode === "stripped" || testMode === "broken") {
       const headers = new Headers({ "content-type": "text/html; charset=utf-8" });
@@ -65,8 +66,8 @@ var worker_default = {
           status: 200,
           headers: new Headers({
             "Content-Type": "text/plain; charset=utf-8",
-            "X-Content-Type-Options": "nosniff"
-          })
+            "X-Content-Type-Options": "nosniff",
+          }),
         });
       }
       if (pathname.includes("404check")) {
@@ -76,8 +77,8 @@ var worker_default = {
           headers: new Headers({
             "Content-Type": "text/html; charset=utf-8",
             "X-Content-Type-Options": "nosniff",
-            "Cache-Control": "public, max-age=300, s-maxage=300"
-          })
+            "Cache-Control": "public, max-age=300, s-maxage=300",
+          }),
         });
       }
       if (/^\/(sitemap.*\.xml|robots\.txt)$/i.test(pathname)) {
@@ -103,19 +104,20 @@ var worker_default = {
             }
             return new Response(res2.body, { status: res2.status, statusText: res2.statusText, headers: h });
           }
-        } catch (_) {
-        }
+        } catch (_) {}
         return new Response("Not Found", { status: 404, headers: { "Content-Type": "text/plain" } });
       }
       const ua = (request.headers.get("user-agent") || "").toLowerCase();
       const isRoot = pathname === "/" || pathname === "" || pathname === "/index.html";
       const prerenderEnabled = env.ENABLE_PRERENDER === "true" || env.ENABLE_PRERENDER === "1";
-      const looksLikeVerifier = /prerender.*verify|verify.*prerender|validator|curl|wget|fetch|domain.*verif/i.test(ua) || /[?&](prerender_?verify|domain_?verify|verify)=/i.test(url.search);
+      const looksLikeVerifier =
+        /prerender.*verify|verify.*prerender|validator|curl|wget|fetch|domain.*verif/i.test(ua) ||
+        /[?&](prerender_?verify|domain_?verify|verify)=/i.test(url.search);
       if (isRoot && looksLikeVerifier && !prerenderEnabled) {
         const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="prerender-verify" content="ok"></head><body>OK</body></html>';
         return new Response(html, {
           status: 200,
-          headers: new Headers({ "Content-Type": "text/html; charset=utf-8", "X-Content-Type-Options": "nosniff" })
+          headers: new Headers({ "Content-Type": "text/html; charset=utf-8", "X-Content-Type-Options": "nosniff" }),
         });
       }
       if (isRoot) {
@@ -137,22 +139,22 @@ var worker_default = {
             method: "GET",
             headers: {
               "X-Prerender-Token": token,
-              "User-Agent": request.headers.get("user-agent") || "Prerender (Cloudflare)"
-            }
+              "User-Agent": request.headers.get("user-agent") || "Prerender (Cloudflare)",
+            },
           });
           const prerenderRes = await fetch(prerenderReq);
           if (prerenderRes.ok) {
             const headers = new Headers(prerenderRes.headers);
             headers.set("X-Prerender", "true");
             headers.set("Cache-Control", "public, max-age=300, s-maxage=300");
-            // PRE-2735 test toggle: simulate a CDN that strips Prerender's request-id header.
+            // PRE-2735 test toggle: simulate a CDN stripping x-prerender-requestid.
             if (url.searchParams.has("strip_header") || env.STRIP_PRERENDER_HEADER === "true") {
               headers.delete("x-prerender-requestid");
             }
             return new Response(prerenderRes.body, {
               status: prerenderRes.status,
               statusText: prerenderRes.statusText,
-              headers
+              headers,
             });
           }
           prerenderStatus = prerenderRes.status;
@@ -199,9 +201,5 @@ var worker_default = {
       }
       throw err;
     }
-  }
+  },
 };
-export {
-  worker_default as default
-};
-//# sourceMappingURL=_worker.js.map
